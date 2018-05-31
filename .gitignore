@@ -1,0 +1,7 @@
+*.exe
+*.o
+*.a
+
+src/github.com/bwmarrin/*
+src/github.com/gorilla/*
+src/golang.org/* 
