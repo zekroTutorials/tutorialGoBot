@@ -1,0 +1,9 @@
+language: go
+
+go:
+- tip
+
+script:
+- "./build.sh"
+
+
