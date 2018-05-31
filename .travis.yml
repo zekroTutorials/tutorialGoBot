@@ -1,9 +1,12 @@
 language: go
 
 go:
-- tip
+- maste
+
+before_install:
+- ls -a
 
 script:
-- "./build.sh"
+- go build ./src/github.com/zekroTutorials/tutorialGoBot/main.go
 
 
