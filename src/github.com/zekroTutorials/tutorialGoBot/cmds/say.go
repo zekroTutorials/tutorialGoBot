@@ -6,6 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Say - Command Funktion für den "say" Command
 func Say(bot *discordgo.Session, args []string, channel *discordgo.Channel, guild *discordgo.Guild, author *discordgo.User, message *discordgo.Message) {
 	if len(args) < 1 {
 		bot.ChannelMessageSendEmbed(channel.ID, &discordgo.MessageEmbed {
