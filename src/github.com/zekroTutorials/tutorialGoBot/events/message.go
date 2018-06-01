@@ -15,7 +15,7 @@ type CmdFunc func(bot *discordgo.Session,
 				  channel *discordgo.Channel, 
 				  guild *discordgo.Guild, 
 				  author *discordgo.User, 
-				  message *discordgo.Message)
+				  message *discordgo.Message) error
 
 // Commands map in welcher alle Funktionen der Commands zu den zugehörigen
 // invokes aufgelistet sind.
@@ -44,12 +44,26 @@ func MessageCreate(bot *discordgo.Session, event *discordgo.MessageCreate) {
 			return
 		}
 
+		// Der Message Content wird zuerst zu einem Array gesplittet, getrennt
+		// mit jedem Leerzeichen
 		contsplit := Split(content, " ")
+		// Der erste EIntrag ist dann der Invoke, von dem noch der Prefix
+		// "abgeschnitten" wird
 		invoke := contsplit[0][len(prefix):]
+		// Der Rest sind die Argumente, die an die command Funktion übergeben werden
 		args := contsplit[1:]
 
+		// Befindet sich der Invoke in der commands map, so wird die Funktion,
+		// welche dem Invoke zugeordnet ist, ausgeführt
 		if cmdfunc, ok := commands[invoke]; ok {
-			cmdfunc(bot, args, channel, guild, author, msg)
+			err := cmdfunc(bot, args, channel, guild, author, msg)
+			if err != nil {
+				bot.ChannelMessageSendEmbed(channel.ID, &discordgo.MessageEmbed {
+					Color:       0xf42613,
+					Title:       "Unexpected Exception",
+					Description: "```" + err.Error() + "```",
+				})
+			}
 			fmt.Printf("CMD | %s#%s (%s) @ %s (%s) | '%s'",
 				author.Username, author.Discriminator, author.ID, guild.Name, guild.ID, content)
 		}
